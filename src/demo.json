@@ -1,0 +1,27 @@
+{
+    "id" : 21,
+    "dataSource" : "PSTN_ESAF",
+    "formatVersion" : 0,
+    "resFormat" : {
+      "responseRecord" : [ {
+        "email" : "",
+        "birthDate" : "",
+        "customerName" : "",
+        "mobileNumber" : "",
+        "accountInfoList" : [ {
+          "accountId" : "",
+          "billingAddress" : "",
+          "subscriptionInfoList" : [ {
+            "activeDate" : "",
+            "serviceNumber" : "",
+            "subscriptionId" : "",
+            "subscriptionDomain" : "",
+            "installationAddress" : ""
+          } ]
+        } ],
+        "certificateType" : "",
+        "certificateNumber" : ""
+      } ],
+      "numberofRecordsFound" : ""
+    }
+  }
