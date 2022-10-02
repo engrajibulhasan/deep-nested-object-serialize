@@ -1,112 +1,34 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react";
+import { resComplexFormat } from "./demoObject";
+import getKeyArray from "./utils/getKeyArray";
+import isInTheState from "./utils/isChecked";
+import isObject from "./utils/isObject";
 
 
 function App() {
+
+  const [selectedKeys, setSelectedKeys] = useState({
+    mnoRequestType: "",
+    responseRecord:
+    {
+      bts: {
+        band: {
+          bandOne: "",
+        },
+        cellName: ""
+      }
+    }
+  });
+  // Content Holder
+  let content = []
+  let treeSteps = 0;
+
+
+  // Handle Click
   const handleClick = (e, value) => {
     console.log(e.name, value);
   }
-  let domContent = []
-  const resComplexFormat = {
-    mnoRequestType: "",
-    responseRecord: [
-      {
-        bts: {
-          band: {
-            bandOne: "",
-            bandTwo: ""
-          },
-
-          btsId: "",
-          g3g4g: "",
-          siteId: "",
-          btsType: "",
-          cgiEcgi: "",
-          cellCode: "",
-          cellName: "",
-          latitude: "",
-          direction: "",
-          longitude: "",
-          veryLong: ["Five", "Three"]
-        },
-        imsi: "",
-        btsId: "",
-        partyA: "",
-        partyB: "",
-        btsName: "",
-        cellType: "",
-        ciStartA: "",
-        operator: "",
-        eventTime: "",
-        lacStartA: "",
-        mccStartA: "",
-        mncStartA: "",
-        timeStamp: "",
-        usageType: "",
-        imeiNumber: "",
-        responseId: "",
-        callDuration: "",
-        providerName: "",
-        responseTime: "",
-        partyBOriginal: "",
-        searchIdentifier: "",
-        responseTimeEpoch: ""
-      }
-    ],
-    numberofRecordsFound: "",
-    operator: "",
-    arafatVai: {
-      vai1: "",
-      vai2: ""
-    }
-  }
-
-
-  const smallObject = {
-    bts: {
-      band: "",
-      others: {
-        btsId: "",
-        g3g4g: "",
-        siteId: "",
-        btsType: "",
-        cgiEcgi: "",
-        cellCode: "",
-        cellName: "",
-        latitude: "",
-        direction: "",
-        longitude: ""
-      },
-      another: {
-        sisters: "",
-        others: "",
-        brothers: {
-          elder: "",
-          younger: ""
-        }
-      }
-    }
-  }
-
-
-
-  function isObject(o) {
-    return o instanceof Object && o.constructor === Object;
-  }
-
-  const getKeyArray = (data) => {
-    if (Array.isArray(data)) {
-      return Object.keys(data[0]);
-    } else if (isObject(data)) {
-      return Object.keys(data)
-    }
-    return data;
-  }
-
-  const style = { color: { color: "red" } }
-
-  let content = ``;
-  let marginCounter = 0;
-
 
 
   const generateCheckbox = (data, root = '_') => {
@@ -120,45 +42,50 @@ function App() {
 
       for (let i = 0; i < objLen; i++) {
         const key = keyArray[i];
-        let _root = root + '_' + key;
+        let _root = root === '_' ? root + key : root + '_' + key;
         let nested = data[key]
-        console.log(key, '=', marginCounter)
+        // console.log(key, '=', treeSteps)
 
         // Creating Array
-        domContent.push({ value: key, label: key, children: '', name: key, margin: marginCounter, id: _root })
+        content.push({
+          id: _root,
+          value: key,
+          label: key,
+          name: key,
+          margin: treeSteps,
+          isChecked: isInTheState(_root, selectedKeys) //Checking in the state, its returns true or false, default false
+        })
 
         if (Array.isArray(nested))
           nested = nested[0]
 
         if (isObject(nested)) {
-          marginCounter++;
-
+          treeSteps++;
           generateCheckbox(nested, _root)
         }
 
       }
     }
-    marginCounter--;
+    treeSteps--;
   }
 
 
   // Function Call
   generateCheckbox(resComplexFormat);
 
-  // Create Markup
-  function createMarkup() {
-    return { __html: content };
-  }
-
-  console.log(domContent);
   return (
     <div className="container">
-      <h1>Deeply nested Object</h1>
+      <h1>Deeply NESTED Object</h1>
 
       {
-        domContent?.length > 0 && domContent.map((item, index) => (
-          <div className={`left-${item.margin}`}>
-            <input type="checkbox" name={item.id} onChange={(e) => handleClick(e.target, 12)} /> <span>{item.name}</span>
+        content?.length > 0 && content.map((item, index) => (
+          <div key={index} className={`left-${item.margin}`}>
+            <input
+              type="checkbox"
+              name={item.id}
+              checked={item.isChecked}
+              onChange={(e) => handleClick(e.target, 12)}
+            /> <span>{item.name}</span>
           </div>
         )
         )
