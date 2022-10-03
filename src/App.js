@@ -4,30 +4,43 @@ import { resComplexFormat } from "./demoObject";
 import getKeyArray from "./utils/getKeyArray";
 import isInTheState from "./utils/isChecked";
 import isObject from "./utils/isObject";
+import prepareObjectForAdd from "./utils/prepareObjectForAdd";
+import stringToArray from "./utils/stringToArray";
 
 
 function App() {
-
-  const [selectedKeys, setSelectedKeys] = useState({
-    mnoRequestType: "",
-    responseRecord:
-    {
-      bts: {
-        band: {
-          bandOne: "",
-        },
-        cellName: ""
-      }
-    }
-  });
+  const response = resComplexFormat;
+  const [selectedKeys, setSelectedKeys] = useState({});
   // Content Holder
   let content = []
   let treeSteps = 0;
 
 
+
+
+
+
+
   // Handle Click
-  const handleClick = (e, value) => {
-    console.log(e.name, value);
+  const handleClick = (e, itemObj) => {
+    const { name, checked } = e
+    const copyObject = { ...selectedKeys };
+    const keys = stringToArray(e.name);
+    if (checked === false) {
+      // REMOVING from STATE
+      // For Root Element only, 
+      if (keys.length === 1) {
+        delete copyObject[keys[0]];
+        setSelectedKeys({ ...copyObject })
+      }
+    } else if (checked === true) {
+      // ADDING IN STATE
+      // For Root Element only, 
+      setSelectedKeys({ ...prepareObjectForAdd(copyObject, keys, itemObj) })
+
+    }
+    // console.log(name, checked, itemObj);
+
   }
 
 
@@ -52,6 +65,7 @@ function App() {
           value: key,
           label: key,
           name: key,
+          children: isObject(nested) ? nested : "",
           margin: treeSteps,
           isChecked: isInTheState(_root, selectedKeys) //Checking in the state, its returns true or false, default false
         })
@@ -71,8 +85,8 @@ function App() {
 
 
   // Function Call
-  generateCheckbox(resComplexFormat);
-
+  generateCheckbox(response);
+  console.log(selectedKeys, "state");
   return (
     <div className="container">
       <h1>Deeply NESTED Object</h1>
@@ -84,7 +98,7 @@ function App() {
               type="checkbox"
               name={item.id}
               checked={item.isChecked}
-              onChange={(e) => handleClick(e.target, 12)}
+              onChange={(e) => handleClick(e.target, item)}
             /> <span>{item.name}</span>
           </div>
         )

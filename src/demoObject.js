@@ -5,7 +5,14 @@ export const resComplexFormat = {
         bts: {
             band: {
                 bandOne: "",
-                bandTwo: ""
+                bandTwo: "",
+                bandThree: {
+                    oneOfThree: "",
+                    twoOfThree: {
+                        final: "",
+                        finalTwo: ""
+                    }
+                }
             },
 
             btsId: "",
@@ -18,7 +25,6 @@ export const resComplexFormat = {
             latitude: "",
             direction: "",
             longitude: "",
-            veryLong: ["Five", "Three"]
         },
         imsi: "",
         btsId: "",
