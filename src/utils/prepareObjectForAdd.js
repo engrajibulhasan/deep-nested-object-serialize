@@ -4,10 +4,12 @@ import isKeyExists from "./isKeyExists";
 
 const prepareObjectForAdd = (state, keys, item) => {
     const { children } = item
-    console.log(children, "children");
+
     switch (keys.length) {
         case 1:
             return { ...state, [keys[0]]: children }
+
+
         case 2:
             console.log("2 Hitted");
             return isKeyExists(state, keys[0])
